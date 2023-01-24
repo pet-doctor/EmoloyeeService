@@ -4,7 +4,9 @@ import com.petdoctor.employee.kafka.KafkaConstant;
 import com.petdoctor.employee.kafka.KafkaService;
 import com.petdoctor.employee.model.dto.DoctorDto;
 import com.petdoctor.employee.model.dto.ChangeAppointmentStateDto;
+import com.petdoctor.employee.model.dto.EnrollClientDto;
 import com.petdoctor.employee.service.DoctorService;
+import org.apache.tomcat.util.http.parser.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -64,7 +66,7 @@ public class DoctorController {
     }
 
     @PostMapping("/openAppointment")
-    public ResponseEntity<?> openAppointment(@RequestParam Long doctorId, @RequestBody Long appointmentId) {
+    public ResponseEntity<?> openAppointment(@RequestParam Long doctorId, @RequestParam Long appointmentId) {
 
         try {
 
@@ -73,6 +75,21 @@ public class DoctorController {
             kafkaService.sendMessage(changeAppointmentStateDto, KafkaConstant.KAFKA_ENROLLMENT_OPEN_APPOINTMENT_TOPIC);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
+
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PostMapping("/enrollClient")
+    public ResponseEntity<?> enrollClient(@RequestParam Long doctorId, @RequestParam Long appointmentId, @RequestParam Long clientId) {
+
+        try {
+
+            EnrollClientDto enrollClientDto = new EnrollClientDto(doctorId, appointmentId, clientId);
+
+            kafkaService.sendMessage(enrollClientDto, KafkaConstant.KAFKA_ENROLLMENT_CLIENT_GROUP);
+            return ResponseEntity.ok().build();
+        } catch(Exception e) {
 
             return ResponseEntity.internalServerError().build();
         }

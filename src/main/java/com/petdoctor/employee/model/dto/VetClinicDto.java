@@ -20,4 +20,13 @@ public class VetClinicDto implements Serializable {
 
     @JsonProperty("email")
     private String email;
+
+    @Override
+    public String toString() {
+        return "VetClinicDto{" +
+                "id=" + id +
+                ", address='" + address + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }

@@ -29,4 +29,16 @@ public class DoctorDto implements Serializable {
 
     @JsonProperty("vet_clinic_id")
     private Long vetClinicId;
+
+    @Override
+    public String toString() {
+        return "DoctorDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", email='" + email + '\'' +
+                ", doctorOffice=" + doctorOffice +
+                ", vetClinicId=" + vetClinicId +
+                '}';
+    }
 }

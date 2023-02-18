@@ -25,8 +25,8 @@ public class VetClinicController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateVetClinic(@RequestParam Long vetClinicId, @RequestBody VetClinicDto vetClinicDto) {
-        VetClinicDto updatedVetClinicDto = vetClinicService.updateVetClinic(vetClinicId, vetClinicDto);
+    public ResponseEntity<?> updateVetClinic(@RequestBody VetClinicDto vetClinicDto) {
+        VetClinicDto updatedVetClinicDto = vetClinicService.updateVetClinic(vetClinicDto);
         kafkaService.sendMessage(vetClinicDto, KafkaConstant.KAFKA_EMPLOYEE_VETCLINIC_TOPIC);
 
         return ResponseEntity.ok(updatedVetClinicDto);

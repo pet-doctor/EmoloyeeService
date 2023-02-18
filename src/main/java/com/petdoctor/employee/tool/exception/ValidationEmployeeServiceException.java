@@ -4,7 +4,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 public class ValidationEmployeeServiceException extends EmployeeServiceException {
 
-    private static final String DEFAULT_MESSAGE = "Некорректный запрос";
+    private static final String DEFAULT_MESSAGE = "Invalid request";
 
     public ValidationEmployeeServiceException(Throwable ex) {
         super(BAD_REQUEST, String.format("%s: %s", DEFAULT_MESSAGE, throwableToString(ex)));

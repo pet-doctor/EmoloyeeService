@@ -4,6 +4,7 @@ import com.petdoctor.employee.model.dto.VetClinicDto;
 import com.petdoctor.employee.model.entity.VetClinicEntity;
 import com.petdoctor.employee.repository.VetClinicRepository;
 import com.petdoctor.employee.service.VetClinicService;
+import com.petdoctor.employee.tool.exception.NotFoundEmployeeServiceException;
 import com.petdoctor.employee.tool.mapper.VetClinicMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,8 @@ public class VetClinicServiceImpl implements VetClinicService {
                 .findVetClinicEntityById(vetClinicId).orElse(null);
 
         if (foundVetClinicEntity == null) {
-            throw new RuntimeException();
+            throw new NotFoundEmployeeServiceException(
+                    String.format("VetClinic with the id: %d doesn't exist", vetClinicId));
         }
 
         deleteVetClinic(vetClinicId);
@@ -52,13 +54,14 @@ public class VetClinicServiceImpl implements VetClinicService {
     @Transactional
     public void deleteVetClinic(Long vetClinicId) {
 
-        VetClinicEntity vetClinicEntity = vetClinicRepository
+        VetClinicEntity foundVetClinicEntity = vetClinicRepository
                 .findVetClinicEntityById(vetClinicId).orElse(null);
 
-        if (vetClinicEntity == null) {
-            throw new RuntimeException();
+        if (foundVetClinicEntity == null) {
+            throw new NotFoundEmployeeServiceException(
+                    String.format("VetClinic with the id: %d doesn't exist", vetClinicId));
         }
 
-        vetClinicRepository.delete(vetClinicEntity);
+        vetClinicRepository.delete(foundVetClinicEntity);
     }
 }

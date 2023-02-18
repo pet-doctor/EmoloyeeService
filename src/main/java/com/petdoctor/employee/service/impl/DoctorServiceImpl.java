@@ -4,6 +4,7 @@ import com.petdoctor.employee.model.dto.DoctorDto;
 import com.petdoctor.employee.model.entity.DoctorEntity;
 import com.petdoctor.employee.repository.DoctorRepository;
 import com.petdoctor.employee.service.DoctorService;
+import com.petdoctor.employee.tool.exception.NotFoundEmployeeServiceException;
 import com.petdoctor.employee.tool.mapper.DoctorMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,6 @@ public class DoctorServiceImpl implements DoctorService {
 
         DoctorEntity doctorEntity = doctorMapper.doctorDtoToDoctorEntity(doctorDto);
 
-
         return doctorMapper
                 .doctorEntityToDoctorDto(doctorRepository.save(doctorEntity));
     }
@@ -40,7 +40,7 @@ public class DoctorServiceImpl implements DoctorService {
                 .orElse(null);
 
         if (foundDoctorEntity == null) {
-            throw new RuntimeException();
+            throw new NotFoundEmployeeServiceException(String.format("Doctor with the id: %d doesn't exist", doctorId));
         }
 
         deleteDoctor(doctorId);
@@ -63,11 +63,12 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Transactional
     public void deleteDoctor(Long doctorId) {
-        DoctorEntity doctorEntity = doctorRepository.findById(doctorId).orElse(null);
-        if (doctorEntity == null) {
-            throw new RuntimeException();
+        DoctorEntity foundDoctorEntity = doctorRepository.findById(doctorId).orElse(null);
+
+        if (foundDoctorEntity == null) {
+            throw new NotFoundEmployeeServiceException(String.format("Doctor with the id: %d doesn't exist", doctorId));
         }
 
-        doctorRepository.delete(doctorEntity);
+        doctorRepository.delete(foundDoctorEntity);
     }
 }

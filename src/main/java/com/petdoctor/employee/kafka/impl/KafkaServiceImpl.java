@@ -29,9 +29,8 @@ public class KafkaServiceImpl implements KafkaService {
 
         JsonNode rootNode = null;
         try {
-            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+            ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
             String payloadJson = ow.writeValueAsString(payload);
-            log.info(payloadJson);
             rootNode = objectMapper.readTree(payloadJson);
         } catch (JsonProcessingException e) {
             e.printStackTrace();

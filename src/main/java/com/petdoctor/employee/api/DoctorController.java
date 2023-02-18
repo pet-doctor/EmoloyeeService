@@ -2,11 +2,10 @@ package com.petdoctor.employee.api;
 
 import com.petdoctor.employee.kafka.KafkaConstant;
 import com.petdoctor.employee.kafka.KafkaService;
-import com.petdoctor.employee.model.dto.DoctorDto;
 import com.petdoctor.employee.model.dto.ChangeAppointmentStateDto;
+import com.petdoctor.employee.model.dto.DoctorDto;
 import com.petdoctor.employee.model.dto.EnrollClientDto;
 import com.petdoctor.employee.service.DoctorService;
-import org.apache.tomcat.util.http.parser.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +31,7 @@ public class DoctorController {
             DoctorDto registeredDoctorDto = doctorService.registerDoctor(doctorDto);
             kafkaService.sendMessage(doctorDto, KafkaConstant.KAFKA_EMPLOYEE_DOCTOR_TOPIC);
             return ResponseEntity.ok(registeredDoctorDto);
-        } catch(RuntimeException e) {
+        } catch (RuntimeException e) {
 
             return ResponseEntity.internalServerError().build();
         }
@@ -46,7 +45,7 @@ public class DoctorController {
             DoctorDto updatedDoctorDto = doctorService.updateDoctor(doctorId, doctorDto);
             kafkaService.sendMessage(doctorDto, KafkaConstant.KAFKA_EMPLOYEE_DOCTOR_TOPIC);
             return ResponseEntity.ok(updatedDoctorDto);
-        } catch(Exception e) {
+        } catch (Exception e) {
 
             return ResponseEntity.internalServerError().build();
         }
@@ -89,7 +88,7 @@ public class DoctorController {
 
             kafkaService.sendMessage(enrollClientDto, KafkaConstant.KAFKA_ENROLLMENT_CLIENT_GROUP);
             return ResponseEntity.ok().build();
-        } catch(Exception e) {
+        } catch (Exception e) {
 
             return ResponseEntity.internalServerError().build();
         }

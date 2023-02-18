@@ -12,7 +12,9 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@Builder
 @Entity
+@Table(name = "vet_clinic")
 public class VetClinicEntity {
 
     @Id

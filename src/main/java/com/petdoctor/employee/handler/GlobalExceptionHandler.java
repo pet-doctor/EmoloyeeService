@@ -31,6 +31,11 @@ public class GlobalExceptionHandler {
             if (ex instanceof NotFoundEmployeeServiceException) {
                 status = "Not found";
             }
+
+            if (ex instanceof ValidationEmployeeServiceException) {
+                status = "Bad request";
+                exception = new ValidationEmployeeServiceException(ex);
+            }
         } else if (ex instanceof MethodArgumentNotValidException ||
                 ex instanceof MethodArgumentTypeMismatchException ||
                 ex instanceof MissingRequestValueException ||

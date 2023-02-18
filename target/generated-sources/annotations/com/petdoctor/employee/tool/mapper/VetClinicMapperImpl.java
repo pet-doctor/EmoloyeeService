@@ -2,12 +2,13 @@ package com.petdoctor.employee.tool.mapper;
 
 import com.petdoctor.employee.model.dto.VetClinicDto;
 import com.petdoctor.employee.model.entity.VetClinicEntity;
+import com.petdoctor.employee.model.entity.VetClinicEntity.VetClinicEntityBuilder;
 import javax.annotation.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-02-18T13:07:14+0300",
+    date = "2023-02-18T22:01:52+0300",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 19.0.1 (Oracle Corporation)"
 )
 @Component
@@ -34,12 +35,12 @@ public class VetClinicMapperImpl implements VetClinicMapper {
             return null;
         }
 
-        VetClinicEntity vetClinicEntity = new VetClinicEntity();
+        VetClinicEntityBuilder vetClinicEntity = VetClinicEntity.builder();
 
-        vetClinicEntity.setId( vetClinicDto.getId() );
-        vetClinicEntity.setAddress( vetClinicDto.getAddress() );
-        vetClinicEntity.setEmail( vetClinicDto.getEmail() );
+        vetClinicEntity.id( vetClinicDto.getId() );
+        vetClinicEntity.address( vetClinicDto.getAddress() );
+        vetClinicEntity.email( vetClinicDto.getEmail() );
 
-        return vetClinicEntity;
+        return vetClinicEntity.build();
     }
 }

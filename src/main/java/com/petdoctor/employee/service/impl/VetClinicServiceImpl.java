@@ -5,10 +5,15 @@ import com.petdoctor.employee.model.entity.VetClinicEntity;
 import com.petdoctor.employee.repository.VetClinicRepository;
 import com.petdoctor.employee.service.VetClinicService;
 import com.petdoctor.employee.tool.exception.NotFoundEmployeeServiceException;
+import com.petdoctor.employee.tool.exception.ValidationEmployeeServiceException;
 import com.petdoctor.employee.tool.mapper.VetClinicMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 public class VetClinicServiceImpl implements VetClinicService {
@@ -23,6 +28,10 @@ public class VetClinicServiceImpl implements VetClinicService {
     }
 
     public VetClinicDto registerVetClinic(VetClinicDto vetClinicDto) {
+
+        if (vetClinicDto == null || vetClinicDto.getAddress() == null || vetClinicDto.getEmail() == null) {
+            throw new ValidationEmployeeServiceException("Параметры email и address обязательны для заполнения");
+        }
 
         VetClinicEntity vetClinicEntity = vetClinicMapper.vetClinicDtoToVetClinicEntity(vetClinicDto);
 

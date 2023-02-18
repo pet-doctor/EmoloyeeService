@@ -11,10 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Stream;
-
 @Service
 public class VetClinicServiceImpl implements VetClinicService {
 
@@ -29,48 +25,53 @@ public class VetClinicServiceImpl implements VetClinicService {
 
     public VetClinicDto registerVetClinic(VetClinicDto vetClinicDto) {
 
-        if (vetClinicDto == null || vetClinicDto.getAddress() == null || vetClinicDto.getEmail() == null) {
-            throw new ValidationEmployeeServiceException("Параметры email и address обязательны для заполнения");
+        if (vetClinicDto == null) {
+            throw new ValidationEmployeeServiceException("VetClinic is null");
         }
 
-        VetClinicEntity vetClinicEntity = vetClinicMapper.vetClinicDtoToVetClinicEntity(vetClinicDto);
+        if (findVetClinicById(vetClinicDto.getId()) != null) {
+            throw new ValidationEmployeeServiceException("Registered VetClinic is already exist!");
+        }
 
-        return vetClinicMapper
-                .vetClinicEntityToVetClinicDto(vetClinicRepository.save(vetClinicEntity));
+        VetClinicEntity vetClinicEntity = mapDtoToEntity(vetClinicDto);
+
+        return mapEntityToDto(
+                vetClinicRepository.save(vetClinicEntity));
     }
 
-    @Transactional
     public VetClinicDto updateVetClinic(Long vetClinicId, VetClinicDto vetClinicDto) {
 
-        VetClinicEntity foundVetClinicEntity = vetClinicRepository
-                .findVetClinicEntityById(vetClinicId).orElse(null);
+        VetClinicEntity vetClinicEntity = findVetClinicById(vetClinicId);
 
-        if (foundVetClinicEntity == null) {
-            throw new NotFoundEmployeeServiceException(
-                    String.format("VetClinic with the id: %d doesn't exist", vetClinicId));
-        }
+        if (vetClinicDto.getId() != null) vetClinicEntity.setId(vetClinicDto.getId());
+        if (vetClinicDto.getAddress() != null) vetClinicEntity.setAddress(vetClinicDto.getAddress());
+        if (vetClinicDto.getEmail() != null) vetClinicEntity.setEmail(vetClinicDto.getEmail());
 
-        deleteVetClinic(vetClinicId);
-
-        foundVetClinicEntity.setId(vetClinicDto.getId());
-        foundVetClinicEntity.setAddress(vetClinicDto.getAddress());
-        foundVetClinicEntity.setEmail(vetClinicDto.getEmail());
-
-        return vetClinicMapper
-                .vetClinicEntityToVetClinicDto(vetClinicRepository.save(foundVetClinicEntity));
+        return mapEntityToDto(vetClinicEntity);
     }
 
-    @Transactional
     public void deleteVetClinic(Long vetClinicId) {
 
-        VetClinicEntity foundVetClinicEntity = vetClinicRepository
-                .findVetClinicEntityById(vetClinicId).orElse(null);
-
-        if (foundVetClinicEntity == null) {
-            throw new NotFoundEmployeeServiceException(
-                    String.format("VetClinic with the id: %d doesn't exist", vetClinicId));
-        }
+        VetClinicEntity foundVetClinicEntity = findVetClinicById(vetClinicId);
 
         vetClinicRepository.delete(foundVetClinicEntity);
+    }
+
+    private VetClinicEntity findVetClinicById(Long id) {
+
+        return vetClinicRepository
+                .findVetClinicEntityById(id)
+                .orElseThrow(() ->
+                        new NotFoundEmployeeServiceException("Vet clinic doesn't exist"));
+    }
+
+    private VetClinicDto mapEntityToDto(VetClinicEntity vetClinicEntity) {
+
+        return vetClinicMapper.vetClinicEntityToVetClinicDto(vetClinicEntity);
+    }
+
+    private VetClinicEntity mapDtoToEntity(VetClinicDto vetClinicDto) {
+
+        return vetClinicMapper.vetClinicDtoToVetClinicEntity(vetClinicDto);
     }
 }

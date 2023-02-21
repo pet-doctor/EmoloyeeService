@@ -1,6 +1,7 @@
 package com.petdoctor.employee.settings.testdata;
 
 import com.petdoctor.employee.model.entity.VetClinicEntity;
+import com.petdoctor.employee.model.enums.VetClinicAddress;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -35,7 +36,7 @@ public class VetClinicTestData {
                 VetClinicEntity.builder()
                         .id(1L)
                         .email("vetclinic@yandex.ru")
-                        .address("Kalatushkina")
+                        .address(VetClinicAddress.KRONVERKSKY)
                         .build()
         );
 

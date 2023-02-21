@@ -5,18 +5,32 @@ import com.petdoctor.employee.kafka.KafkaService;
 import com.petdoctor.employee.model.dto.ChangeAppointmentStateDto;
 import com.petdoctor.employee.model.dto.DoctorDto;
 import com.petdoctor.employee.model.dto.EnrollClientDto;
+import com.petdoctor.employee.model.enums.DoctorCategory;
+import com.petdoctor.employee.model.enums.VetClinicAddress;
 import com.petdoctor.employee.service.DoctorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 @RequestMapping("/petdoctor/employee/doctor")
 public class DoctorController {
 
     private final DoctorService doctorService;
     private final KafkaService kafkaService;
+
+    @GetMapping
+    public ResponseEntity<?> getDoctorsByCategory(@RequestParam DoctorCategory doctorCategory,
+                                                  @RequestParam VetClinicAddress vetClinicAddress) {
+
+        List<DoctorDto> foundDoctors = doctorService.getDoctorsByCategory(doctorCategory, vetClinicAddress);
+
+        return ResponseEntity.ok(foundDoctors);
+    }
 
     @PostMapping("/register")
     public ResponseEntity<?> registerDoctor(@RequestBody DoctorDto doctorDto) {

@@ -1,5 +1,6 @@
 package com.petdoctor.employee.model.entity;
 
+import com.petdoctor.employee.model.enums.DoctorCategory;
 import lombok.*;
 
 import javax.persistence.*;
@@ -33,7 +34,11 @@ public class DoctorEntity {
     @Column(name = "doctor_office", nullable = false, unique = true)
     private Integer doctorOffice;
 
-    @Column(name = "vet_clinic_id")
+    @Column(name = "category", nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private DoctorCategory doctorCategory;
+
+    @Column(name = "vet_clinic_id", nullable = false)
     private Long vetClinicEntityId;
 
     @Override

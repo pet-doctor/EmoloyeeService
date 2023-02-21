@@ -1,5 +1,6 @@
 package com.petdoctor.employee.model.entity;
 
+import com.petdoctor.employee.model.enums.VetClinicAddress;
 import lombok.*;
 
 import javax.persistence.*;
@@ -23,7 +24,8 @@ public class VetClinicEntity {
     private Long id;
 
     @Column(name = "address", nullable = false, unique = true)
-    private String address;
+    @Enumerated(value = EnumType.STRING)
+    private VetClinicAddress address;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;

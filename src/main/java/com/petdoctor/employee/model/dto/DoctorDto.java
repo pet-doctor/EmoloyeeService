@@ -1,6 +1,7 @@
 package com.petdoctor.employee.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.petdoctor.employee.model.enums.DoctorCategory;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,9 @@ public class DoctorDto implements Serializable {
 
     @JsonProperty("doctor_office")
     private Integer doctorOffice;
+
+    @JsonProperty("category")
+    private DoctorCategory category;
 
     @JsonProperty("vet_clinic_id")
     private Long vetClinicId;

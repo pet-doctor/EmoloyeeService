@@ -1,0 +1,8 @@
+{
+  "id": 1,
+  "name": "Alex",
+  "surname": "Bosov",
+  "email": "test@gmail.com",
+  "doctor_office": 1,
+  "vet_clinic_id": 1
+}

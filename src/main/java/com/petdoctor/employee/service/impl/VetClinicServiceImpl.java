@@ -4,61 +4,79 @@ import com.petdoctor.employee.model.dto.VetClinicDto;
 import com.petdoctor.employee.model.entity.VetClinicEntity;
 import com.petdoctor.employee.repository.VetClinicRepository;
 import com.petdoctor.employee.service.VetClinicService;
+import com.petdoctor.employee.tool.exception.NotFoundEmployeeServiceException;
+import com.petdoctor.employee.tool.exception.ValidationEmployeeServiceException;
 import com.petdoctor.employee.tool.mapper.VetClinicMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
+@RequiredArgsConstructor
 public class VetClinicServiceImpl implements VetClinicService {
 
     private final VetClinicRepository vetClinicRepository;
     private final VetClinicMapper vetClinicMapper;
 
-    @Autowired
-    public VetClinicServiceImpl(VetClinicRepository vetClinicRepository, VetClinicMapper vetClinicMapper) {
-        this.vetClinicRepository = vetClinicRepository;
-        this.vetClinicMapper = vetClinicMapper;
-    }
-
     public VetClinicDto registerVetClinic(VetClinicDto vetClinicDto) {
 
-        VetClinicEntity vetClinicEntity = vetClinicMapper.vetClinicDtoToVetClinicEntity(vetClinicDto);
-
-        return vetClinicMapper
-                .vetClinicEntityToVetClinicDto(vetClinicRepository.save(vetClinicEntity));
-    }
-
-    @Transactional
-    public VetClinicDto updateVetClinic(Long vetClinicId, VetClinicDto vetClinicDto) {
-
-        VetClinicEntity foundVetClinicEntity = vetClinicRepository
-                .findVetClinicEntityById(vetClinicId).orElse(null);
-
-        if (foundVetClinicEntity == null) {
-            throw new RuntimeException();
+        if (vetClinicDto == null) {
+            throw new ValidationEmployeeServiceException("Vet Clinic is empty");
         }
 
-        deleteVetClinic(vetClinicId);
+        if (findVetClinicById(vetClinicDto.getId()).isPresent()) {
+            throw new ValidationEmployeeServiceException(
+                    String.format("Vet Clinic with the id: %d is already exist!", vetClinicDto.getId()));
+        }
 
-        foundVetClinicEntity.setId(vetClinicDto.getId());
-        foundVetClinicEntity.setAddress(vetClinicDto.getAddress());
-        foundVetClinicEntity.setEmail(vetClinicDto.getEmail());
+        VetClinicEntity vetClinicEntity = mapDtoToEntity(vetClinicDto);
 
-        return vetClinicMapper
-                .vetClinicEntityToVetClinicDto(vetClinicRepository.save(foundVetClinicEntity));
+        return mapEntityToDto(
+                vetClinicRepository.save(vetClinicEntity));
     }
 
-    @Transactional
+    public VetClinicDto updateVetClinic(VetClinicDto vetClinicDto) {
+
+        if (vetClinicDto == null) {
+            throw new ValidationEmployeeServiceException("Vet Clinic is empty");
+        }
+
+        VetClinicEntity vetClinicEntity = findVetClinicById(vetClinicDto.getId())
+                .orElseThrow(() ->
+                        new NotFoundEmployeeServiceException(
+                                String.format("Vet Clinic with the id: %d doesn't exist!", vetClinicDto.getId())));
+
+        if (vetClinicDto.getAddress() != null) vetClinicEntity.setAddress(vetClinicDto.getAddress());
+        if (vetClinicDto.getEmail() != null) vetClinicEntity.setEmail(vetClinicDto.getEmail());
+
+        return mapEntityToDto(vetClinicEntity);
+    }
+
     public void deleteVetClinic(Long vetClinicId) {
 
-        VetClinicEntity vetClinicEntity = vetClinicRepository
-                .findVetClinicEntityById(vetClinicId).orElse(null);
+        VetClinicEntity foundVetClinicEntity = findVetClinicById(vetClinicId)
+                .orElseThrow(() ->
+                        new NotFoundEmployeeServiceException(
+                                String.format("Vet Clinic with the id: %d doesn't exist!", vetClinicId)));
 
-        if (vetClinicEntity == null) {
-            throw new RuntimeException();
-        }
+        vetClinicRepository.delete(foundVetClinicEntity);
+    }
 
-        vetClinicRepository.delete(vetClinicEntity);
+    private Optional<VetClinicEntity> findVetClinicById(Long id) {
+
+        return vetClinicRepository.findVetClinicEntityById(id);
+    }
+
+    private VetClinicDto mapEntityToDto(VetClinicEntity vetClinicEntity) {
+
+        return vetClinicMapper.vetClinicEntityToVetClinicDto(vetClinicEntity);
+    }
+
+    private VetClinicEntity mapDtoToEntity(VetClinicDto vetClinicDto) {
+
+        return vetClinicMapper.vetClinicDtoToVetClinicEntity(vetClinicDto);
     }
 }

@@ -10,19 +10,23 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChangeAppointmentStateDto implements Serializable {
-
-    @JsonProperty("appointment")
-    private Long appointmentId;
+public class EnrollClientDto implements Serializable {
 
     @JsonProperty("doctor")
     private Long doctorId;
 
+    @JsonProperty("appointment")
+    private Long appointmentId;
+
+    @JsonProperty("client")
+    private Long clientId;
+
     @Override
     public String toString() {
-        return "ChangeAppointmentStateDto{" +
-                "appointmentId=" + appointmentId +
-                ", doctorId=" + doctorId +
+        return "EnrollClientDto{" +
+                "doctorId=" + doctorId +
+                ", appointmentId=" + appointmentId +
+                ", clientId=" + clientId +
                 '}';
     }
 }

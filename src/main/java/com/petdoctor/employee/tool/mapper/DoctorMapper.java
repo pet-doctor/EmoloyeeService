@@ -15,6 +15,7 @@ public interface DoctorMapper {
             @Mapping(source = "surname", target = "surname"),
             @Mapping(source = "email", target = "email"),
             @Mapping(source = "doctorOffice", target = "doctorOffice"),
+            @Mapping(source = "doctorCategory", target = "category"),
             @Mapping(source = "vetClinicEntityId", target = "vetClinicId")
     })
     DoctorDto doctorEntityToDoctorDto(DoctorEntity doctor);
@@ -25,6 +26,7 @@ public interface DoctorMapper {
             @Mapping(source = "surname", target = "surname"),
             @Mapping(source = "email", target = "email"),
             @Mapping(source = "doctorOffice", target = "doctorOffice"),
+            @Mapping(source = "category", target = "doctorCategory"),
             @Mapping(source = "vetClinicId", target = "vetClinicEntityId")
     })
     DoctorEntity doctorDtoToDoctorEntity(DoctorDto doctorDto);
